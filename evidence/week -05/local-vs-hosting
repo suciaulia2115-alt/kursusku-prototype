@@ -1,0 +1,173 @@
+LOCAL VS HOSTING
+================
+
+1. LOCAL DEVELOPMENT
+====================
+
+Project dijalankan menggunakan Laragon.
+
+Lokasi project:
+
+C:\laragon\www\kursusku-prototype
+
+
+URL Local:
+
+http://kursusku-prototype.test
+
+
+Alternatif jika menggunakan localhost:
+
+http://localhost/kursusku-prototype
+
+
+Struktur project:
+
+kursusku-prototype/
+│
+├── index.php
+├── registration.php
+├── process-registration.php
+├── helpers.php
+│
+├── assets/
+│   └── css/
+│       └── style.css
+│
+└── evidence/
+    └── week-05/
+
+
+CSS:
+
+<link rel="stylesheet" href="assets/css/style.css">
+
+
+Form:
+
+<form
+    action="process-registration.php"
+    method="POST"
+>
+
+
+Link halaman:
+
+<a href="index.php">
+    Katalog
+</a>
+
+<a href="registration.php">
+    Daftar Kursus
+</a>
+
+
+2. HOSTING
+===========
+
+Ketika project dipindahkan ke hosting,
+folder project ditempatkan di dalam public_html.
+
+Struktur hosting:
+
+public_html/
+│
+├── index.php
+├── registration.php
+├── process-registration.php
+├── helpers.php
+│
+└── assets/
+    └── css/
+        └── style.css
+
+
+Contoh URL hosting:
+
+https://domainkamu.com
+
+
+CSS tetap menggunakan relative path:
+
+<link rel="stylesheet" href="assets/css/style.css">
+
+
+Form tetap menggunakan relative path:
+
+<form
+    action="process-registration.php"
+    method="POST"
+>
+
+
+Link halaman tetap menggunakan relative path:
+
+<a href="index.php">
+    Katalog
+</a>
+
+<a href="registration.php">
+    Daftar Kursus
+</a>
+
+
+3. PERBEDAAN LOCAL DAN HOSTING
+==============================
+
+LOCAL
+-----
+
+Server:
+Laragon
+
+Folder:
+D:\laragon\www\kursusku-prototype
+
+URL:
+http://kursusku-prototype.test
+
+
+HOSTING
+-------
+
+Server:
+Web Hosting
+
+Folder:
+public_html
+
+URL:
+https://domainkamu.com
+
+
+4. RELATIVE PATH
+================
+
+Agar project dapat digunakan baik di local
+maupun di hosting, digunakan relative path.
+
+Contoh yang benar:
+
+assets/css/style.css
+registration.php
+process-registration.php
+index.php
+
+
+Tidak menggunakan alamat yang hanya berlaku
+untuk local seperti:
+
+http://localhost/kursusku-prototype/
+
+
+5. KESIMPULAN
+=============
+
+Project KursusKu dapat dijalankan pada
+lingkungan local menggunakan Laragon dan
+dapat dipindahkan ke hosting.
+
+Penggunaan relative path membuat link,
+form, dan file CSS tetap dapat bekerja
+ketika project dipindahkan dari local
+ke hosting.

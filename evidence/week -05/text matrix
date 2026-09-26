@@ -1,0 +1,19 @@
+TEST MATRIX
+
+TC-01
+Fitur: Form Registrasi
+Input: Data registrasi valid
+Expected Result: Data berhasil diproses dan pengguna dapat melanjutkan
+Status: PASS
+
+TC-02
+Fitur: Form Registrasi
+Input: Data tidak lengkap
+Expected Result: Sistem menampilkan pesan validasi
+Status: PASS
+
+TC-03
+Fitur: Navigasi
+Input: Klik menu navigasi
+Expected Result: Pengguna diarahkan ke halaman yang sesuai
+Status: PASS
