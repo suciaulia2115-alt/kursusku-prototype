@@ -4,8 +4,8 @@ require_once __DIR__ . '/helpers.php';
 
 $courseName = 'Laravel Fundamental';
 $fee = 350000;
-$participantCount = 1;
-$discountPercent = 0;
+$participantCount = 3;
+$discountPercent = 10;
 $adminFee = 25000;
 $isActive = true;
 
