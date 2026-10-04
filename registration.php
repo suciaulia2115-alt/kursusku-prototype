@@ -1,1156 +1,1060 @@
-<?php
 
+<?php
 require_once __DIR__ . '/helpers.php';
 
-/*
-|--------------------------------------------------------------------------
-| DATA GET
-|--------------------------------------------------------------------------
-| Data GET dibaca dari URL.
-| Contoh:
-| registration.php?course=web-dasar
-*/
+$siteName = 'KursusKu';
 
-$selectedCourse = $_GET['course'] ?? '';
-
-$courses = [
-    'web-dasar' => 'Web Dasar',
-    'php-dasar' => 'PHP Dasar',
-    'php-lanjutan' => 'PHP Lanjutan',
-    'laravel-fundamental' => 'Laravel Fundamental',
-    'mysql-dasar' => 'MySQL Dasar',
-    'ui-web-dasar' => 'UI Web Dasar'
-];
-
-$selectedCourseName = $courses[$selectedCourse] ?? '';
-
+function h($value)
+{
+    return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+}
 ?>
-
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Kursus - <?= h($siteName) ?></title>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <link rel="stylesheet" href="assets/css/style.css">
 
-    <title>
-        Pendaftaran Kursus - KursusKu
-    </title>
+    <style>
+        :root {
+            --purple-dark: #321747;
+            --purple-deep: #472260;
+            --purple-main: #70439a;
+            --purple-light: #8954b8;
+            --purple-soft: #f7f2fb;
+            --purple-pale: #eee3f7;
+            --gold: #f3d68d;
+            --text-dark: #39234e;
+            --text-muted: #766783;
+            --border: #e5d8ee;
+            --white: #fff;
+        }
 
-    <link
-        rel="stylesheet"
-        href="assets/css/style.css"
-    >
+        * {
+            box-sizing: border-box;
+        }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--purple-soft);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* HEADER */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: 100%;
+            background: linear-gradient(
+                115deg,
+                var(--purple-dark),
+                #512d70,
+                var(--purple-main)
+            );
+            box-shadow: 0 8px 25px rgba(40, 18, 60, .18);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1250px;
+            margin: 0 auto;
+        }
+
+        .header-container {
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 25px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: white;
+            font-size: 29px;
+            font-weight: 900;
+        }
+
+        .brand-icon {
+            width: 58px;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #f5d78b, #c89a44);
+            color: #422653;
+            font-size: 31px;
+            font-weight: 900;
+            box-shadow: 0 7px 20px rgba(0, 0, 0, .15);
+            transition: transform .3s ease;
+        }
+
+        .brand:hover .brand-icon {
+            transform: rotate(-8deg) scale(1.06);
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .navbar a {
+            padding: 12px 20px;
+            border-radius: 30px;
+            color: #f6edfc;
+            font-size: 15px;
+            font-weight: 700;
+            transition: all .3s ease;
+        }
+
+        .navbar a:hover,
+        .navbar a.active {
+            background: rgba(255, 255, 255, .16);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* HERO */
+        .registration-hero {
+            position: relative;
+            overflow: hidden;
+            padding: 85px 0;
+            color: white;
+            background:
+                radial-gradient(
+                    circle at 90% 10%,
+                    rgba(206, 163, 244, .35),
+                    transparent 32%
+                ),
+                linear-gradient(
+                    120deg,
+                    var(--purple-deep),
+                    var(--purple-main),
+                    var(--purple-light)
+                );
+        }
+
+        .registration-hero::before,
+        .registration-hero::after {
+            content: "";
+            position: absolute;
+            border: 1px solid rgba(255, 255, 255, .15);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .registration-hero::before {
+            width: 400px;
+            height: 400px;
+            top: -260px;
+            right: 5%;
+        }
+
+        .registration-hero::after {
+            width: 250px;
+            height: 250px;
+            bottom: -180px;
+            right: 35%;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 850px;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            margin-bottom: 18px;
+            color: var(--gold);
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+
+        .registration-hero h1 {
+            margin: 0 0 20px;
+            color: white;
+            font-size: clamp(38px, 5vw, 65px);
+            line-height: 1.15;
+            font-weight: 900;
+            letter-spacing: -1.5px;
+        }
+
+        .registration-hero p {
+            max-width: 750px;
+            margin: 0;
+            color: #f1e6f9;
+            font-size: 19px;
+            line-height: 1.8;
+        }
+
+        .hero-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 30px;
+            padding: 15px 25px;
+            border-radius: 13px;
+            background: linear-gradient(135deg, #f5d78b, #d3aa55);
+            color: #45285d;
+            font-weight: 800;
+            box-shadow: 0 8px 22px rgba(30, 12, 44, .18);
+            transition: all .3s ease;
+        }
+
+        .hero-button:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 28px rgba(30, 12, 44, .25);
+        }
+
+        /* FORM SECTION */
+        .registration-section {
+            padding: 75px 0;
+        }
+
+        .registration-card {
+            padding: 48px;
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            background: white;
+            box-shadow: 0 18px 50px rgba(73, 52, 95, .09);
+        }
+
+        .registration-heading {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .form-icon {
+            width: 65px;
+            height: 65px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            background: var(--purple-pale);
+            color: var(--purple-main);
+            font-size: 30px;
+        }
+
+        .registration-heading h2 {
+            margin: 0 0 5px;
+            color: var(--purple-dark);
+            font-size: 30px;
+            font-weight: 900;
+        }
+
+        .registration-heading p {
+            margin: 0;
+            color: var(--text-muted);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 25px 22px;
+        }
+
+        .form-group {
+            min-width: 0;
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+
+        .form-full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label,
+        .form-group legend {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .registration-form input[type="text"],
+        .registration-form input[type="email"],
+        .registration-form input[type="tel"],
+        .registration-form select,
+        .registration-form textarea {
+            display: block;
+            width: 100%;
+            padding: 15px 17px;
+            border: 1px solid #d9c8e8;
+            border-radius: 12px;
+            background: #fcfaff;
+            color: var(--text-dark);
+            font: inherit;
+            transition: all .25s ease;
+        }
+
+        .registration-form input::placeholder,
+        .registration-form textarea::placeholder {
+            color: #a395b0;
+        }
+
+        .registration-form input:focus,
+        .registration-form select:focus,
+        .registration-form textarea:focus {
+            outline: none;
+            border-color: var(--purple-light);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(137, 84, 184, .12);
+        }
+
+        .registration-form textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+        /* RADIO DAN CHECKBOX */
+        .choice-list {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(190px, 1fr)
+            );
+            gap: 14px;
+        }
+
+        .choice-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-height: 60px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: #faf7fd;
+            cursor: pointer;
+            transition: all .25s ease;
+        }
+
+        .choice-item:hover {
+            border-color: var(--purple-light);
+            background: var(--purple-pale);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 18px rgba(112, 67, 154, .08);
+        }
+
+        .choice-item input {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            accent-color: var(--purple-main);
+            cursor: pointer;
+        }
+
+        .choice-item span {
+            color: var(--text-dark);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* TOMBOL */
+        .form-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        .form-back,
+        .form-submit {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 54px;
+            padding: 15px 25px;
+            border-radius: 13px;
+            font: inherit;
+            font-weight: 800;
+            text-align: center;
+            transition: all .3s ease;
+        }
+
+        .form-back {
+            border: 1px solid var(--border);
+            background: var(--purple-pale);
+            color: var(--purple-dark);
+        }
+
+        .form-back:hover {
+            background: #e2d1f1;
+            transform: translateY(-3px);
+        }
+
+        .form-submit {
+            flex: 1;
+            border: 0;
+            background: linear-gradient(
+                135deg,
+                var(--purple-light),
+                var(--purple-main)
+            );
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(112, 67, 154, .18);
+        }
+
+        .form-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(112, 67, 154, .28);
+        }
+
+        /* UJI GET */
+        .get-test-section {
+            padding: 0 0 75px;
+        }
+
+        .get-test-card {
+            padding: 35px;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            background: white;
+            box-shadow: 0 12px 35px rgba(73, 52, 95, .07);
+        }
+
+        .get-test-card h2 {
+            margin: 0 0 10px;
+            color: var(--purple-dark);
+            font-size: 26px;
+        }
+
+        .get-test-card p {
+            color: var(--text-muted);
+        }
+
+        .get-test-card form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .get-test-card input {
+            flex: 1;
+            min-width: 220px;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font: inherit;
+        }
+
+        .get-test-card input:focus {
+            outline: none;
+            border-color: var(--purple-light);
+            box-shadow: 0 0 0 4px rgba(137, 84, 184, .12);
+        }
+
+        .get-test-card button {
+            padding: 14px 22px;
+            border: none;
+            border-radius: 12px;
+            background: var(--purple-main);
+            color: white;
+            font: inherit;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all .3s ease;
+        }
+
+        .get-test-card button:hover {
+            background: var(--purple-dark);
+            transform: translateY(-2px);
+        }
+
+        .get-result {
+            margin-top: 22px;
+            padding: 18px;
+            border: 1px solid #b8dfc4;
+            border-radius: 12px;
+            background: #effaf2;
+            color: #21643a;
+            overflow-wrap: anywhere;
+        }
+
+        .get-result p {
+            margin: 5px 0 0;
+            color: #21643a;
+        }
+
+        /* FOOTER */
+        .footer {
+            padding: 30px 0;
+            background: var(--purple-dark);
+            color: #f1e6f9;
+        }
+
+        .footer-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            font-size: 20px;
+            font-weight: 900;
+        }
+
+        .footer-brand .brand-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            font-size: 22px;
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        /* ANIMASI */
+        .reveal {
+            opacity: 0;
+            transform: translateY(35px);
+            transition:
+                opacity .8s ease,
+                transform .8s ease;
+        }
+
+        .reveal.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition:
+                opacity .8s ease,
+                transform .8s ease;
+        }
+
+        .reveal-left.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(40px);
+            transition:
+                opacity .8s ease,
+                transform .8s ease;
+        }
+
+        .reveal-right.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 800px) {
+            .header-container {
+                flex-direction: column;
+                justify-content: center;
+                padding: 18px 0;
+            }
+
+            .registration-hero {
+                padding: 65px 0;
+            }
+
+            .registration-card {
+                padding: 35px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-full {
+                grid-column: auto;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 92%;
+            }
+
+            .brand {
+                font-size: 25px;
+            }
+
+            .brand-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 27px;
+            }
+
+            .navbar {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 3px;
+            }
+
+            .navbar a {
+                padding: 10px 13px;
+                font-size: 12px;
+            }
+
+            .registration-hero {
+                padding: 50px 0;
+            }
+
+            .eyebrow {
+                font-size: 11px;
+                letter-spacing: 1px;
+            }
+
+            .registration-hero h1 {
+                font-size: 36px;
+            }
+
+            .registration-hero p {
+                font-size: 15px;
+            }
+
+            .registration-section {
+                padding: 40px 0;
+            }
+
+            .registration-card {
+                padding: 25px 18px;
+                border-radius: 20px;
+            }
+
+            .registration-heading {
+                align-items: flex-start;
+                gap: 12px;
+                margin-bottom: 30px;
+            }
+
+            .form-icon {
+                width: 48px;
+                height: 48px;
+                border-radius: 14px;
+                font-size: 22px;
+            }
+
+            .registration-heading h2 {
+                font-size: 22px;
+            }
+
+            .registration-heading p {
+                font-size: 13px;
+            }
+
+            .choice-list {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .form-back,
+            .form-submit {
+                width: 100%;
+            }
+
+            .get-test-card {
+                padding: 25px 18px;
+            }
+
+            .get-test-card form {
+                flex-direction: column;
+            }
+
+            .get-test-card input,
+            .get-test-card button {
+                width: 100%;
+            }
+        }
+
+        /* Hormati pengaturan pengurangan animasi */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition-duration: .01ms !important;
+                animation-duration: .01ms !important;
+            }
+
+            .reveal,
+            .reveal-left,
+            .reveal-right {
+                opacity: 1;
+                transform: none;
+            }
+        }
+    </style>
 </head>
 
+<body>
 
-<body class="registration-page">
-
-
-<!-- =====================================================
-     HEADER
-===================================================== -->
-
-<header class="premium-header">
-
-    <div class="container">
-
-        <nav class="premium-navbar">
-
-            <!-- LOGO -->
-
-            <a
-                href="index.php"
-                class="premium-logo"
-            >
-
-                <span class="logo-icon">
-                    K
-                </span>
-
-                <span>
-                    KursusKu
-                </span>
-
+    <!-- HEADER -->
+    <header class="header">
+        <div class="container header-container">
+            <a href="index.php" class="brand">
+                <span class="brand-icon">K</span>
+                <span>KursusKu</span>
             </a>
 
-
-            <!-- NAVIGASI -->
-
-            <div class="premium-nav-links">
-
-                <a href="index.php">
-                    Beranda
-                </a>
-
-                <a href="index.php#katalog">
-                    Katalog
-                </a>
-
-                <a
-                    href="registration.php"
-                    class="active"
-                >
-                    Daftar
-                </a>
-
-            </div>
-
-        </nav>
-
-    </div>
-
-</header>
-
-
-
-<!-- =====================================================
-     HERO
-===================================================== -->
-
-<section class="registration-hero">
-
-    <div class="hero-glow hero-glow-one"></div>
-
-    <div class="hero-glow hero-glow-two"></div>
-
-
-    <div class="container">
-
-        <div class="registration-hero-content">
-
-
-            <!-- BADGE -->
-
-            <div class="registration-badge">
-
-                <span>
-                    ●
-                </span>
-
-                PENDAFTARAN KURSUS
-
-            </div>
-
-
-            <!-- JUDUL -->
-
-            <h1>
-
-                Mulai Perjalanan
-
-                <span>
-                    Belajarmu
-                </span>
-
-            </h1>
-
-
-            <!-- DESKRIPSI -->
-
-            <p>
-
-                Tingkatkan kemampuanmu bersama KursusKu.
-                Isi formulir pendaftaran dan pilih kursus
-                yang sesuai dengan tujuan belajarmu.
-
-            </p>
-
-
-            <!-- STATISTIK -->
-
-            <div class="hero-mini-info">
-
-
-                <div>
-
-                    <strong>
-                        6+
-                    </strong>
-
-                    <span>
-                        Kursus
-                    </span>
-
-                </div>
-
-
-                <div>
-
-                    <strong>
-                        100%
-                    </strong>
-
-                    <span>
-                        Online
-                    </span>
-
-                </div>
-
-
-                <div>
-
-                    <strong>
-                        Flexible
-                    </strong>
-
-                    <span>
-                        Belajar
-                    </span>
-
-                </div>
-
-
-            </div>
-
+            <nav class="navbar">
+                <a href="index.php">Beranda</a>
+                <a href="index.php#katalog">Katalog</a>
+                <a href="registration.php" class="active">Daftar Kursus</a>
+            </nav>
         </div>
-
-    </div>
-
-</section>
-
-
-
-<!-- =====================================================
-     MAIN CONTENT
-===================================================== -->
-
-<main class="registration-content">
-
-    <div class="container">
-
-        <div class="registration-layout">
-
-
-            <!-- =================================================
-                 KOLOM KIRI
-            ================================================= -->
-
-            <aside class="registration-info">
-
-
-                <!-- CARD INFORMASI -->
-
-                <div class="info-card">
-
-
-                    <span class="info-label">
-
-                        KENAPA KURSUSKU?
-
-                    </span>
-
-
-                    <h2>
-
-                        Belajar lebih mudah,
-                        <span>
-                            berkembang lebih cepat.
-                        </span>
-
-                    </h2>
-
-
-                    <p>
-
-                        KursusKu membantu kamu mempelajari
-                        berbagai keterampilan digital melalui
-                        materi yang terstruktur dan mudah dipahami.
-
-                    </p>
-
-
-                    <!-- BENEFIT -->
-
-                    <div class="benefit-list">
-
-
-                        <!-- BENEFIT 1 -->
-
-                        <div class="benefit-item">
-
-                            <div class="benefit-icon">
-                                ✓
-                            </div>
-
-                            <div>
-
-                                <strong>
-                                    Materi Terstruktur
-                                </strong>
-
-                                <span>
-                                    Materi disusun secara bertahap
-                                    agar mudah dipelajari.
-                                </span>
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- BENEFIT 2 -->
-
-                        <div class="benefit-item">
-
-                            <div class="benefit-icon">
-                                ✓
-                            </div>
-
-                            <div>
-
-                                <strong>
-                                    Pembelajaran Fleksibel
-                                </strong>
-
-                                <span>
-                                    Belajar sesuai waktu dan
-                                    kemampuanmu.
-                                </span>
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- BENEFIT 3 -->
-
-                        <div class="benefit-item">
-
-                            <div class="benefit-icon">
-                                ✓
-                            </div>
-
-                            <div>
-
-                                <strong>
-                                    Skill yang Relevan
-                                </strong>
-
-                                <span>
-                                    Fokus pada keterampilan web
-                                    dan teknologi digital.
-                                </span>
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- BENEFIT 4 -->
-
-                        <div class="benefit-item">
-
-                            <div class="benefit-icon">
-                                ✓
-                            </div>
-
-                            <div>
-
-                                <strong>
-                                    Sertifikat Kursus
-                                </strong>
-
-                                <span>
-                                    Dapatkan bukti penyelesaian
-                                    kursusmu.
-                                </span>
-
-                            </div>
-
-                        </div>
-
-
-                    </div>
-
-
-                    <!-- HARGA -->
-
-                    <div class="price-highlight">
-
-                        <span>
-                            Mulai belajar dari
-                        </span>
-
-                        <strong>
-                            Rp 200.000
-                        </strong>
-
-                    </div>
-
-
-                </div>
-
-
-                <!-- CARD KEAMANAN -->
-
-                <div class="secure-card">
-
-                    <div class="secure-icon">
-                        ✓
-                    </div>
-
-                    <div>
-
-                        <strong>
-                            Pendaftaran Aman
-                        </strong>
-
-                        <span>
-                            Data yang kamu masukkan
-                            diproses dengan aman.
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-            </aside>
-
-
-
-            <!-- =================================================
-                 KOLOM KANAN
-            ================================================= -->
-
-            <section class="registration-form-card">
-
-
-                <!-- HEADER FORM -->
-
-                <div class="form-card-header">
-
-                    <div>
-
-                        <span class="form-eyebrow">
-
-                            FORMULIR PENDAFTARAN
-
-                        </span>
-
-
-                        <h2>
-                            Data Peserta
-                        </h2>
-
-
-                        <p>
-
-                            Silakan isi data berikut dengan
-                            lengkap dan benar.
-
-                        </p>
-
-                    </div>
-
-
-                    <div class="form-number">
-                        01
-                    </div>
-
-                </div>
-
-
-
-                <!-- =================================================
-                     FORM POST
-                ================================================= -->
-
-                <form
-                    action="process-registration.php"
-                    method="POST"
-                    class="registration-form"
-                >
-
-
-                    <!-- SOURCE -->
-
-                    <input
-                        type="hidden"
-                        name="source"
-                        value="week-05"
-                    >
-
-
-                    <!-- NAMA -->
-
-                    <div class="form-group">
-
-                        <label for="name">
-
-                            Nama Lengkap
-
-                            <span>
-                                *
-                            </span>
-
-                        </label>
-
-
-                        <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            placeholder="Masukkan nama lengkap"
-                            minlength="3"
-                            maxlength="100"
-                            autocomplete="name"
-                            required
-                        >
-
-                    </div>
-
-
-
-                    <!-- EMAIL -->
-
-                    <div class="form-group">
-
-                        <label for="email">
-
-                            Email
-
-                            <span>
-                                *
-                            </span>
-
-                        </label>
-
-
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            placeholder="contoh@email.com"
-                            maxlength="120"
-                            autocomplete="email"
-                            required
-                        >
-
-                    </div>
-
-
-
-                    <!-- TELEPON + PROGRAM STUDI -->
-
-                    <div class="form-row">
-
-
-                        <!-- TELEPON -->
-
-                        <div class="form-group">
-
-                            <label for="phone">
-
-                                Nomor Telepon
-
-                                <span>
-                                    *
-                                </span>
-
-                            </label>
-
-
-                            <input
-                                type="tel"
-                                id="phone"
-                                name="phone"
-                                placeholder="08xxxxxxxxxx"
-                                maxlength="15"
-                                autocomplete="tel"
-                                required
-                            >
-
-                        </div>
-
-
-                        <!-- PROGRAM STUDI -->
-
-                        <div class="form-group">
-
-                            <label for="study_program">
-
-                                Program Studi
-
-                                <span>
-                                    *
-                                </span>
-
-                            </label>
-
-
-                            <input
-                                type="text"
-                                id="study_program"
-                                name="study_program"
-                                placeholder="Contoh: Informatika"
-                                maxlength="100"
-                                required
-                            >
-
-                        </div>
-
-
-                    </div>
-
-
-
-                    <!-- KURSUS -->
-
-                    <div class="form-group">
-
-                        <label for="course">
-
-                            Pilih Kursus
-
-                            <span>
-                                *
-                            </span>
-
-                        </label>
-
-
-                        <select
-                            id="course"
-                            name="course"
-                            required
-                        >
-
-                            <option value="">
-
-                                Pilih kursus yang ingin diikuti
-
-                            </option>
-
-
-                            <?php foreach ($courses as $value => $name): ?>
-
-                                <option
-                                    value="<?= e($value) ?>"
-                                    <?= $selectedCourse === $value ? 'selected' : '' ?>
-                                >
-
-                                    <?= e($name) ?>
-
-                                </option>
-
-                            <?php endforeach; ?>
-
-
-                        </select>
-
-                    </div>
-
-
-
-                    <!-- =================================================
-                         PESAN GET
-                    ================================================= -->
-
-                    <?php if ($selectedCourseName !== ''): ?>
-
-                        <div class="get-success-message">
-
-                            <span class="get-message-icon">
-                                GET
-                            </span>
-
-                            <div>
-
-                                <strong>
-                                    Kursus dari GET berhasil diterima
-                                </strong>
-
-                                <p>
-                                    Kursus yang dipilih melalui URL:
-                                    <b>
-                                        <?= e($selectedCourseName) ?>
-                                    </b>
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    <?php endif; ?>
-
-
-
-                    <!-- JENIS PESERTA -->
-
-                    <div class="form-group">
-
-                        <label>
-
-                            Jenis Peserta
-
-                            <span>
-                                *
-                            </span>
-
-                        </label>
-
-
-                        <div class="radio-grid">
-
-
-                            <!-- MAHASISWA -->
-
-                            <label class="choice-card">
-
-                                <input
-                                    type="radio"
-                                    name="participant_type"
-                                    value="mahasiswa"
-                                    required
-                                >
-
-
-                                <span class="choice-content">
-
-                                    <strong>
-                                        Mahasiswa
-                                    </strong>
-
-                                    <small>
-                                        Saya masih berstatus mahasiswa
-                                    </small>
-
-                                </span>
-
-                            </label>
-
-
-
-                            <!-- UMUM -->
-
-                            <label class="choice-card">
-
-                                <input
-                                    type="radio"
-                                    name="participant_type"
-                                    value="umum"
-                                >
-
-
-                                <span class="choice-content">
-
-                                    <strong>
-                                        Umum
-                                    </strong>
-
-                                    <small>
-                                        Saya peserta umum
-                                    </small>
-
-                                </span>
-
-                            </label>
-
-
-                        </div>
-
-                    </div>
-
-
-
-                    <!-- MINAT -->
-
-                    <div class="form-group">
-
-                        <label>
-
-                            Bidang yang Diminati
-
-                        </label>
-
-
-                        <div class="checkbox-grid">
-
-
-                            <label class="check-card">
-
-                                <input
-                                    type="checkbox"
-                                    name="interests[]"
-                                    value="ui-ux"
-                                >
-
-                                <span>
-                                    UI/UX
-                                </span>
-
-                            </label>
-
-
-                            <label class="check-card">
-
-                                <input
-                                    type="checkbox"
-                                    name="interests[]"
-                                    value="database"
-                                >
-
-                                <span>
-                                    Database
-                                </span>
-
-                            </label>
-
-
-                            <label class="check-card">
-
-                                <input
-                                    type="checkbox"
-                                    name="interests[]"
-                                    value="backend"
-                                >
-
-                                <span>
-                                    Backend
-                                </span>
-
-                            </label>
-
-
-                        </div>
-
-                    </div>
-
-
-
-                    <!-- CATATAN -->
-
-                    <div class="form-group">
-
-                        <label for="note">
-
-                            Catatan Tambahan
-
-                        </label>
-
-
-                        <textarea
-                            id="note"
-                            name="note"
-                            rows="4"
-                            maxlength="300"
-                            placeholder="Tuliskan catatan atau pertanyaan jika ada..."
-                        ></textarea>
-
-                    </div>
-
-
-
-                    <!-- TOMBOL POST -->
-
-                    <div class="form-submit">
-
-
-                        <button
-                            type="submit"
-                            class="premium-submit"
-                        >
-
-                            <span>
-                                Daftar Sekarang
-                            </span>
-
-                            <strong>
-                                →
-                            </strong>
-
-                        </button>
-
-
-                        <p>
-
-                            Dengan mengirim formulir,
-                            kamu menyatakan data yang diberikan
-                            sudah benar.
-
-                        </p>
-
-                    </div>
-
-
-                </form>
-
-
-
-                <!-- =================================================
-                     FORM GET
-                ================================================= -->
-
-                <div class="get-test-card">
-
-
-                    <!-- ICON -->
-
-                    <div class="get-test-icon">
-
-                        GET
-
-                    </div>
-
-
-                    <!-- CONTENT -->
-
-                    <div class="get-test-content">
-
-
-                        <span class="get-test-label">
-
-                            PENGUJIAN METHOD GET
-
-                        </span>
-
-
-                        <h3>
-
-                            Coba Kirim Data dengan GET
-
-                        </h3>
-
-
-                        <p>
-
-                            Masukkan kode kursus di bawah.
-                            Data akan dikirim menggunakan GET
-                            dan dapat dilihat langsung pada URL browser.
-
-                        </p>
-
-
-                        <!-- FORM GET -->
-
-                        <form
-                            action="registration.php"
-                            method="GET"
-                            class="get-test-form"
-                        >
-
-
-                            <input
-                                type="text"
-                                name="course"
-                                placeholder="Contoh: web-dasar"
-                            >
-
-
-                            <button type="submit">
-
-                                Coba GET →
-
-                            </button>
-
-
-                        </form>
-
-
-                        <!-- CONTOH -->
-
-                        <div class="get-example">
-
-                            Contoh:
-
-                            <code>
-                                web-dasar
-                            </code>
-
-                            atau
-
-                            <code>
-                                php-dasar
-                            </code>
-
-                        </div>
-
-
-                    </div>
-
-                </div>
-
-
-            </section>
-
-        </div>
-
-    </div>
-
-</main>
-
-
-
-<!-- =====================================================
-     FOOTER
-===================================================== -->
-
-<footer class="premium-footer">
-
-    <div class="container">
-
-        <div class="footer-content">
-
-
-            <!-- FOOTER BRAND -->
-
-            <div>
-
-                <div class="footer-logo">
-
-                    KursusKu
-
-                </div>
-
+    </header>
+
+    <main class="registration-page">
+
+        <!-- HERO -->
+        <section class="registration-hero">
+            <div class="container hero-content reveal">
+                <span class="eyebrow">✦ PENDAFTARAN KURSUS ✦</span>
+
+                <h1>
+                    Mulai Perjalanan<br>
+                    Belajarmu Hari Ini
+                </h1>
 
                 <p>
-
-                    Belajar hari ini,
-                    berkembang untuk masa depan.
-
+                    Lengkapi formulir berikut untuk mendaftar
+                    dan memilih kursus yang sesuai dengan minatmu.
                 </p>
 
+                <a href="#formulir" class="hero-button">
+                    Isi Formulir
+                    <span aria-hidden="true">↓</span>
+                </a>
             </div>
+        </section>
 
+        <!-- FORMULIR -->
+        <section class="registration-section" id="formulir">
+            <div class="container">
+                <div class="registration-card reveal">
 
-            <!-- FOOTER LINKS -->
+                    <div class="registration-heading">
+                        <span class="form-icon" aria-hidden="true">✦</span>
+                        <div>
+                            <h2>Formulir Pendaftaran</h2>
+                            <p>Isi informasi dengan benar dan lengkap.</p>
+                        </div>
+                    </div>
 
-            <div class="footer-links">
+                    <form
+                        action="process-registration.php"
+                        method="POST"
+                        class="registration-form"
+                    >
+                        <input
+                            type="hidden"
+                            name="source"
+                            value="week-05"
+                        >
 
-                <a href="index.php">
-                    Beranda
-                </a>
+                        <div class="form-grid">
 
-                <a href="index.php#katalog">
-                    Katalog
-                </a>
+                            <!-- NAMA -->
+                            <div class="form-group reveal">
+                                <label for="name">Nama Lengkap</label>
+                                <input
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    placeholder="Masukkan nama lengkap"
+                                    minlength="3"
+                                    maxlength="100"
+                                    autocomplete="name"
+                                    required
+                                >
+                            </div>
 
-                <a href="registration.php">
-                    Pendaftaran
-                </a>
+                            <!-- EMAIL -->
+                            <div class="form-group reveal">
+                                <label for="email">Alamat Email</label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    placeholder="contoh@email.com"
+                                    autocomplete="email"
+                                    required
+                                >
+                            </div>
 
+                            <!-- TELEPON -->
+                            <div class="form-group reveal">
+                                <label for="phone">Nomor Telepon</label>
+                                <input
+                                    type="tel"
+                                    id="phone"
+                                    name="phone"
+                                    placeholder="08xxxxxxxxxx"
+                                    maxlength="20"
+                                    autocomplete="tel"
+                                    required
+                                >
+                            </div>
+
+                            <!-- PROGRAM STUDI -->
+                            <div class="form-group reveal">
+                                <label for="study_program">Program Studi</label>
+                                <input
+                                    type="text"
+                                    id="study_program"
+                                    name="study_program"
+                                    placeholder="Masukkan program studi"
+                                    required
+                                >
+                            </div>
+
+                            <!-- KURSUS -->
+                            <div class="form-group form-full reveal">
+                                <label for="course">Pilih Kursus</label>
+                                <select id="course" name="course" required>
+                                    <option value="">-- Pilih Kursus --</option>
+                                    <option value="Web Dasar">Web Dasar</option>
+                                    <option value="PHP Dasar">PHP Dasar</option>
+                                    <option value="PHP Lanjutan">PHP Lanjutan</option>
+                                    <option value="Laravel Fundamental">Laravel Fundamental</option>
+                                    <option value="MySQL Dasar">MySQL Dasar</option>
+                                    <option value="UI Web Dasar">UI Web Dasar</option>
+                                </select>
+                            </div>
+
+                            <!-- JENIS PESERTA -->
+                            <fieldset class="form-group form-full reveal">
+                                <legend>Jenis Peserta</legend>
+
+                                <div class="choice-list">
+                                    <label class="choice-item">
+                                        <input
+                                            type="radio"
+                                            name="participant_type"
+                                            value="Pelajar"
+                                            required
+                                        >
+                                        <span>Pelajar</span>
+                                    </label>
+
+                                    <label class="choice-item">
+                                        <input
+                                            type="radio"
+                                            name="participant_type"
+                                            value="Mahasiswa"
+                                        >
+                                        <span>Mahasiswa</span>
+                                    </label>
+
+                                    <label class="choice-item">
+                                        <input
+                                            type="radio"
+                                            name="participant_type"
+                                            value="Umum"
+                                        >
+                                        <span>Umum</span>
+                                    </label>
+                                </div>
+                            </fieldset>
+
+                            <!-- MINAT -->
+                            <fieldset class="form-group form-full reveal">
+                                <legend>Minat Pembelajaran</legend>
+
+                                <div class="choice-list">
+                                    <label class="choice-item">
+                                        <input
+                                            type="checkbox"
+                                            name="interests[]"
+                                            value="UI/UX"
+                                        >
+                                        <span>UI/UX</span>
+                                    </label>
+
+                                    <label class="choice-item">
+                                        <input
+                                            type="checkbox"
+                                            name="interests[]"
+                                            value="Database"
+                                        >
+                                        <span>Database</span>
+                                    </label>
+
+                                    <label class="choice-item">
+                                        <input
+                                            type="checkbox"
+                                            name="interests[]"
+                                            value="Backend"
+                                        >
+                                        <span>Backend</span>
+                                    </label>
+                                </div>
+                            </fieldset>
+
+                            <!-- CATATAN -->
+                            <div class="form-group form-full reveal">
+                                <label for="note">Catatan Tambahan</label>
+                                <textarea
+                                    id="note"
+                                    name="note"
+                                    rows="5"
+                                    placeholder="Tuliskan catatan jika diperlukan"
+                                ></textarea>
+                            </div>
+
+                        </div>
+
+                        <!-- TOMBOL -->
+                        <div class="form-actions reveal">
+                            <a href="index.php" class="form-back">
+                                Kembali ke Katalog
+                            </a>
+
+                            <button type="submit" class="form-submit">
+                                Kirim Pendaftaran
+                                <span aria-hidden="true">→</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
+        </section>
 
+        <!-- UJI GET -->
+        <section class="get-test-section">
+            <div class="container">
+                <div class="get-test-card reveal">
+                    <h2>Uji Metode GET</h2>
 
+                    <p>
+                        Masukkan teks berikut untuk melihat cara kerja
+                        metode GET melalui alamat URL.
+                    </p>
+
+                    <form action="registration.php" method="GET">
+                        <input
+                            type="text"
+                            name="uji_get"
+                            placeholder="Masukkan teks pengujian"
+                            value="<?= isset($_GET['uji_get']) ? h($_GET['uji_get']) : '' ?>"
+                            required
+                        >
+
+                        <button type="submit">
+                            Uji GET →
+                        </button>
+                    </form>
+
+                    <?php if (isset($_GET['uji_get'])): ?>
+                        <div class="get-result" role="status">
+                            <strong>GET berhasil!</strong>
+                            <p>
+                                Data yang dikirim:
+                                <?= h($_GET['uji_get']) ?>
+                            </p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container footer-container">
+            <a href="index.php" class="footer-brand">
+                <span class="brand-icon">K</span>
+                <span>KursusKu</span>
+            </a>
+
+            <p>
+                &copy; <?= date('Y') ?> KursusKu.
+                Semua hak dilindungi.
+            </p>
         </div>
+    </footer>
 
+    <!-- ANIMASI SAAT SCROLL -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const elements = document.querySelectorAll(
+                ".reveal, .reveal-left, .reveal-right"
+            );
 
-        <!-- FOOTER BOTTOM -->
+            if (!("IntersectionObserver" in window)) {
+                elements.forEach(function (element) {
+                    element.classList.add("show");
+                });
+                return;
+            }
 
-        <div class="footer-bottom">
+            const observer = new IntersectionObserver(
+                function (entries, currentObserver) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add("show");
+                            currentObserver.unobserve(entry.target);
+                        }
+                    });
+                },
+                {
+                    threshold: 0.12,
+                    rootMargin: "0px 0px -30px 0px"
+                }
+            );
 
-            <span>
-
-                &copy;
-                <?= date('Y') ?>
-                KursusKu
-
-            </span>
-
-
-            <span>
-
-                Platform Pembelajaran Digital
-
-            </span>
-
-        </div>
-
-
-    </div>
-
-</footer>
-
-
+            elements.forEach(function (element, index) {
+                element.style.transitionDelay =
+                    (index % 4) * 100 + "ms";
+                observer.observe(element);
+            });
+        });
+    </script>
 
 </body>
-
 </html>
-<form action="process-registration.php" method="GET">
-
-    <input
-        type="hidden"
-        name="source"
-        value="week-05"
-    >
-
-    <input
-        type="text"
-        name="name"
-        placeholder="Nama lengkap"
-        required
-    >
-
-    <input
-        type="email"
-        name="email"
-        placeholder="Email"
-        required
-    >
-
-    <input
-        type="text"
-        name="phone"
-        placeholder="Nomor telepon"
-        required
-    >
-
-    <input
-        type="text"
-        name="study_program"
-        placeholder="Program studi"
-        required
-    >
-
-    <select name="course" required>
-
-        <option value="">
-            Pilih kursus
-        </option>
-
-        <option value="web-dasar">
-            Web Dasar
-        </option>
-
-        <option value="php-dasar">
-            PHP Dasar
-        </option>
-
-        <option value="laravel-fundamental">
-            Laravel Fundamental
-        </option>
-
-    </select>
-
-    <button type="submit">
-        Kirim GET →
-    </button>
-<!-- =========================
-     TOMBOL PENGUJIAN GET
-========================= -->
-
-<div class="registration-actions">
-
-    <a
-        href="registration.php"
-        class="back-button"
-    >
-        ← Kembali
-    </a>
-
-    <a
-        href="process-registration.php?source=week-05&name=suciaulia&email=suciaulia000000%40gmail.com&phone=0000&study_program=Informatika&course=web-dasar"
-        class="get-button"
-    >
-        ↗ Tes GET
-    </a>
-
-</div>

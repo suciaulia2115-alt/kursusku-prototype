@@ -1,47 +1,128 @@
 <?php
-
-require_once __DIR__ . '/helpers.php';
+require_once 'helpers.php';
 
 $tests = [
     [
-        'name' => 'Format Rupiah',
-        'result' => rupiah(350000),
-        'expected' => 'Rp 350.000'
+        'name' => 'Format rupiah',
+        'expected' => 'Rp 250.000',
+        'actual' => rupiah(250000)
     ],
     [
-        'name' => 'Status Penuh',
-        'result' => statusKursus(25, 25),
-        'expected' => 'Penuh'
+        'name' => 'Status kursus penuh',
+        'expected' => 'Penuh',
+        'actual' => statusKursus(25, 25)
     ],
     [
-        'name' => 'Status Tersedia',
-        'result' => statusKursus(25, 24),
-        'expected' => 'Tersedia'
+        'name' => 'Status kursus tersedia',
+        'expected' => 'Tersedia',
+        'actual' => statusKursus(30, 29)
     ],
     [
-        'name' => 'Sisa Kursi',
-        'result' => sisaKursi(20, 0),
-        'expected' => 20
+        'name' => 'Sisa kursi tersedia',
+        'expected' => 20,
+        'actual' => sisaKursi(20, 0)
     ],
     [
-        'name' => 'Format Tanggal',
-        'result' => formatTanggal('2026-10-01'),
-        'expected' => '01-10-2026'
+        'name' => 'Sisa kursi kursus penuh',
+        'expected' => 0,
+        'actual' => sisaKursi(25, 25)
     ],
     [
-        'name' => 'Sisa Kursi Penuh',
-        'result' => sisaKursi(25, 25),
-        'expected' => 0
+        'name' => 'Format tanggal',
+        'expected' => '15-09-2026',
+        'actual' => formatTanggal('2026-09-15')
     ]
 ];
 
-echo "<h2>Hasil Test Functions</h2>";
-
-foreach ($tests as $test) {
-    if ($test['result'] === $test['expected']) {
-        echo "PASS - " . $test['name'] . "<br>";
-    } else {
-        echo "FAIL - " . $test['name'] . "<br>";
-    }
-}
+$totalPass = 0;
+$totalFail = 0;
 ?>
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Functions - KursusKu</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <main class="section">
+        <div class="container">
+            <div class="section-heading">
+                <span class="eyebrow">PENGUJIAN PHP</span>
+                <h1>Test Functions</h1>
+                <p>Hasil pengujian fungsi pada Pertemuan 4.</p>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="course-table">
+                    <thead>
+                        <tr>
+                            <th>Nama Pengujian</th>
+                            <th>Hasil yang Diharapkan</th>
+                            <th>Hasil Aktual</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <?php foreach ($tests as $test): ?>
+                            <?php
+                            $pass = $test['expected'] === $test['actual'];
+
+                            if ($pass) {
+                                $totalPass++;
+                            } else {
+                                $totalFail++;
+                            }
+                            ?>
+
+                            <tr>
+                                <td>
+                                    <?= htmlspecialchars($test['name']); ?>
+                                </td>
+
+                                <td>
+                                    <?= htmlspecialchars(
+                                        (string) $test['expected']
+                                    ); ?>
+                                </td>
+
+                                <td>
+                                    <?= htmlspecialchars(
+                                        (string) $test['actual']
+                                    ); ?>
+                                </td>
+
+                                <td>
+                                    <?php if ($pass): ?>
+                                        <span class="status-badge badge-available">
+                                            PASS
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="status-badge badge-full">
+                                            FAIL
+                                        </span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="string-card">
+                <h2>Ringkasan Pengujian</h2>
+                <p>Total pengujian: <?= count($tests); ?></p>
+                <p>Total PASS: <?= $totalPass; ?></p>
+                <p>Total FAIL: <?= $totalFail; ?></p>
+            </div>
+
+            <a href="index.php" class="btn btn-primary">
+                Kembali ke Katalog
+            </a>
+        </div>
+    </main>
+</body>
+</html>

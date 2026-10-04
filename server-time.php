@@ -1,7 +1,5 @@
 <?php
+$serverTime = date('Y-m-d H:i:s');
 
-$serverTime = date("Y-m-d H:i:s");
-
-echo "Waktu server: " . $serverTime;
-
+echo 'Waktu server: ' . $serverTime;
 ?>
