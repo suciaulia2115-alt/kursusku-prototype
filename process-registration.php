@@ -1,4 +1,3 @@
-
 <?php
 // ==========================================
 // PROCESS REGISTRATION - KURSUSKU
@@ -6,36 +5,30 @@
 
 $errors = [];
 
-// Fungsi untuk mengamankan output
+// Mengamankan output
 function bersihkan($data)
 {
     return htmlspecialchars((string) $data, ENT_QUOTES, 'UTF-8');
 }
 
-// Fungsi format rupiah
-function formatRupiah($angka)
-{
-    return 'Rp' . number_format((float) $angka, 0, ',', '.');
-}
-
-// Pastikan formulir dikirim menggunakan POST
+// Memastikan formulir dikirim menggunakan POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: registration.php');
     exit;
 }
 
 // Mengambil data formulir
-$nama = trim($_POST['name'] ?? '');
-$email = trim($_POST['email'] ?? '');
-$telepon = trim($_POST['phone'] ?? '');
-$program = trim($_POST['study_program'] ?? '');
-$kursus = trim($_POST['course'] ?? '');
-$jenisPeserta = trim($_POST['participant_type'] ?? '');
-$minat = $_POST['interests'] ?? [];
-$catatan = trim($_POST['note'] ?? '');
-$sumber = trim($_POST['source'] ?? '');
+$nama          = trim($_POST['name'] ?? '');
+$email         = trim($_POST['email'] ?? '');
+$telepon       = trim($_POST['phone'] ?? '');
+$program       = trim($_POST['study_program'] ?? '');
+$kursus        = trim($_POST['course'] ?? '');
+$jenisPeserta  = trim($_POST['participant_type'] ?? '');
+$minat         = $_POST['interests'] ?? [];
+$catatan       = trim($_POST['note'] ?? '');
+$sumber        = trim($_POST['source'] ?? '');
 
-// Daftar kursus yang tersedia
+// Daftar pilihan yang diperbolehkan
 $daftarKursus = [
     'Web Dasar',
     'PHP Dasar',
@@ -45,14 +38,12 @@ $daftarKursus = [
     'UI Web Dasar'
 ];
 
-// Daftar jenis peserta
 $daftarPeserta = [
     'Pelajar',
     'Mahasiswa',
     'Umum'
 ];
 
-// Daftar minat
 $daftarMinat = [
     'UI/UX',
     'Database',
@@ -84,6 +75,8 @@ if ($telepon === '') {
     $errors[] = 'Nomor telepon wajib diisi.';
 } elseif (strlen($telepon) > 20) {
     $errors[] = 'Nomor telepon maksimal 20 karakter.';
+} elseif (!preg_match('/^[0-9+\-\s()]+$/', $telepon)) {
+    $errors[] = 'Nomor telepon hanya boleh berisi angka dan tanda +, -, atau kurung.';
 }
 
 // Validasi program studi
@@ -106,42 +99,21 @@ if (!is_array($minat)) {
     $minat = [];
     $errors[] = 'Format pilihan minat tidak valid.';
 } else {
-    $minat = array_values(array_intersect($minat, $daftarMinat));
+    $minat = array_values(array_unique(
+        array_intersect($minat, $daftarMinat)
+    ));
+}
+
+// Validasi catatan
+if (strlen($catatan) > 1000) {
+    $errors[] = 'Catatan tambahan maksimal 1000 karakter.';
 }
 
 // Validasi sumber formulir
 if ($sumber !== 'week-05') {
     $errors[] = 'Sumber formulir tidak valid.';
 }
-
-// ==========================================
-// DATA BIAYA KURSUS
-// ==========================================
-
-$biayaKursus = [
-    'Web Dasar' => 250000,
-    'PHP Dasar' => 350000,
-    'PHP Lanjutan' => 450000,
-    'Laravel Fundamental' => 500000,
-    'MySQL Dasar' => 300000,
-    'UI Web Dasar' => 275000
-];
-
-$biaya = $biayaKursus[$kursus] ?? 0;
-
-// Diskon berdasarkan jenis peserta
-$diskonPersen = 0;
-
-if ($jenisPeserta === 'Pelajar') {
-    $diskonPersen = 10;
-} elseif ($jenisPeserta === 'Mahasiswa') {
-    $diskonPersen = 15;
-}
-
-$diskon = (int) ($biaya * $diskonPersen / 100);
-$total = $biaya - $diskon;
 ?>
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -161,6 +133,10 @@ $total = $biaya - $diskon;
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             margin: 0;
             font-family: "Segoe UI", Arial, sans-serif;
@@ -169,18 +145,22 @@ $total = $biaya - $diskon;
             line-height: 1.6;
         }
 
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        /* =====================================
+           HEADER
+        ===================================== */
+
         .header {
             position: relative;
             z-index: 10;
             background: linear-gradient(135deg, #392064, #7042a5);
             box-shadow: 0 5px 25px rgba(55, 32, 100, 0.16);
             animation: headerDown 0.7s ease both;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: auto;
         }
 
         .header-container {
@@ -214,6 +194,11 @@ $total = $biaya - $diskon;
             background: #eadbff;
             font-weight: 900;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            transition: transform 0.3s ease;
+        }
+
+        .brand:hover .brand-icon {
+            transform: rotate(-8deg) scale(1.08);
         }
 
         .navbar {
@@ -224,14 +209,30 @@ $total = $biaya - $diskon;
         }
 
         .navbar a {
+            position: relative;
             color: #fff;
             text-decoration: none;
             font-weight: 600;
             transition: color 0.25s ease;
         }
 
+        .navbar a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -6px;
+            width: 0;
+            height: 2px;
+            background: #eadbff;
+            transition: width 0.3s ease;
+        }
+
         .navbar a:hover {
             color: #eadbff;
+        }
+
+        .navbar a:hover::after {
+            width: 100%;
         }
 
         /* =====================================
@@ -262,6 +263,10 @@ $total = $biaya - $diskon;
             animation: cardEnter 0.8s ease both;
         }
 
+        /* =====================================
+           JUDUL HASIL
+        ===================================== */
+
         .result-heading {
             text-align: center;
             margin-bottom: 35px;
@@ -288,6 +293,7 @@ $total = $biaya - $diskon;
 
         .result-icon.error {
             background: linear-gradient(135deg, #d18b9a, #a94c68);
+            box-shadow: 0 10px 25px rgba(169, 76, 104, 0.2);
         }
 
         .result-heading h1 {
@@ -301,6 +307,10 @@ $total = $biaya - $diskon;
             margin: 0;
             color: #766985;
             font-size: 16px;
+        }
+
+        .result-heading p strong {
+            color: #5c4175;
         }
 
         .result-card h2 {
@@ -327,11 +337,21 @@ $total = $biaya - $diskon;
             background: #faf7fc;
             border: 1px solid #eee5f3;
             border-radius: 16px;
-            transition: transform 0.25s ease,
-                        box-shadow 0.25s ease,
-                        border-color 0.25s ease;
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease,
+                border-color 0.25s ease;
             animation: itemFade 0.6s ease both;
         }
+
+        .result-item:nth-child(1) { animation-delay: 0.05s; }
+        .result-item:nth-child(2) { animation-delay: 0.10s; }
+        .result-item:nth-child(3) { animation-delay: 0.15s; }
+        .result-item:nth-child(4) { animation-delay: 0.20s; }
+        .result-item:nth-child(5) { animation-delay: 0.25s; }
+        .result-item:nth-child(6) { animation-delay: 0.30s; }
+        .result-item:nth-child(7) { animation-delay: 0.35s; }
+        .result-item:nth-child(8) { animation-delay: 0.40s; }
 
         .result-item:hover {
             transform: translateY(-4px);
@@ -354,38 +374,6 @@ $total = $biaya - $diskon;
             line-height: 1.6;
         }
 
-        .fee-box {
-            margin-top: 25px;
-            padding: 22px;
-            border-radius: 17px;
-            color: #fff;
-            background: linear-gradient(135deg, #56318a, #8055b7);
-            box-shadow: 0 10px 25px rgba(86, 49, 138, 0.16);
-            animation: itemFade 0.7s ease both;
-        }
-
-        .fee-box p {
-            margin: 0 0 5px;
-            color: #eee4fb;
-            font-size: 14px;
-        }
-
-        .fee-box strong {
-            font-size: 28px;
-        }
-
-        .fee-detail {
-            display: flex;
-            justify-content: space-between;
-            gap: 15px;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.18);
-        }
-
-        .fee-detail:last-child {
-            border-bottom: 0;
-        }
-
         /* =====================================
            PESAN ERROR
         ===================================== */
@@ -397,6 +385,7 @@ $total = $biaya - $diskon;
             background: #fff4f6;
             border: 1px solid #f0d2db;
             border-radius: 16px;
+            animation: itemFade 0.6s ease both;
         }
 
         .error-message strong {
@@ -436,23 +425,29 @@ $total = $biaya - $diskon;
             padding: 13px 24px;
             color: #fff;
             background: linear-gradient(135deg, #9675b0, #5c4175);
+            border: 1px solid transparent;
             border-radius: 13px;
             text-decoration: none;
             font-size: 15px;
             font-weight: 700;
-            transition: transform 0.25s ease,
-                        box-shadow 0.25s ease;
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
         }
 
         .result-button.secondary {
             color: #73548d;
             background: #f3eaf8;
-            border: 1px solid #e5d7ed;
+            border-color: #e5d7ed;
         }
 
         .result-button:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(83, 53, 107, 0.18);
+        }
+
+        .result-button:active {
+            transform: translateY(0) scale(0.98);
         }
 
         /* =====================================
@@ -721,26 +716,7 @@ $total = $biaya - $diskon;
 
                     </div>
 
-                    <!-- RINCIAN BIAYA -->
-                    <h2>Estimasi Biaya Kursus</h2>
-
-                    <div class="fee-box">
-                        <div class="fee-detail">
-                            <span>Biaya kursus</span>
-                            <strong><?= formatRupiah($biaya); ?></strong>
-                        </div>
-
-                        <div class="fee-detail">
-                            <span>Diskon (<?= $diskonPersen; ?>%)</span>
-                            <strong>- <?= formatRupiah($diskon); ?></strong>
-                        </div>
-
-                        <div class="fee-detail">
-                            <span>Total biaya</span>
-                            <strong><?= formatRupiah($total); ?></strong>
-                        </div>
-                    </div>
-
+                    <!-- TOMBOL NAVIGASI -->
                     <div class="result-actions">
                         <a href="index.php#katalog" class="result-button">
                             Kembali ke Katalog

@@ -1,16 +1,53 @@
-
 <?php
+
 require __DIR__ . '/data.php';
 require __DIR__ . '/helpers.php';
+
 ?>
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>Daftar Kursus | KursusKu</title>
 
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
     <style>
+
+        :root {
+            --purple-dark: #29134d;
+            --purple: #6336a0;
+            --purple-light: #9864d0;
+            --lavender: #f2eaff;
+            --gold: #f3d58b;
+            --text: #332348;
+            --muted: #81748f;
+            --border: #e8def3;
+            --white: #fff;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -22,741 +59,1517 @@ require __DIR__ . '/helpers.php';
         }
 
         body {
-            font-family: "Segoe UI", Arial, sans-serif;
-            background: #f7f4fc;
-            color: #302449;
+            font-family: "DM Sans", sans-serif;
+            color: var(--text);
+            background: #f8f5fc;
             line-height: 1.6;
             overflow-x: hidden;
         }
 
-        /* HEADER */
-        .premium-header {
-            width: 100%;
-            background: #24143f;
-            padding: 16px 6%;
+        /* BACKGROUND */
+
+        .background-glow {
+            position: fixed;
+            width: 360px;
+            height: 360px;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: .25;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .glow-one {
+            background: #c5a1f5;
+            top: 180px;
+            left: -150px;
+        }
+
+        .glow-two {
+            background: #e9c8ff;
+            right: -150px;
+            bottom: 50px;
+        }
+
+        /* NAVBAR */
+
+        header {
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 4px 20px rgba(28, 13, 53, 0.2);
+            background: rgba(41, 19, 77, .94);
+            backdrop-filter: blur(14px);
+            box-shadow:
+                0 5px 25px
+                rgba(41, 19, 77, .15);
         }
 
-        .header-container {
-            max-width: 1200px;
+        .navbar {
+            max-width: 1250px;
             margin: auto;
+            min-height: 78px;
+            padding: 0 30px;
+
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            gap: 25px;
+            align-items: center;
+            gap: 20px;
         }
 
-        .premium-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
+        .logo {
+            font-family: "Plus Jakarta Sans", sans-serif;
             color: white;
-        }
-
-        .brand-icon {
-            width: 48px;
-            height: 48px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 15px;
-            background: linear-gradient(135deg, #c5a6ff, #8d5de5);
-            color: #24143f;
-            font-size: 25px;
-            font-weight: 900;
-        }
-
-        .brand-name {
-            font-size: 23px;
+            font-size: 27px;
             font-weight: 800;
-            line-height: 1.2;
+            letter-spacing: -.8px;
         }
 
-        .brand-name small {
-            display: block;
-            color: #d5c5f2;
-            font-size: 9px;
-            letter-spacing: 2px;
-            margin-top: 4px;
+        .logo span {
+            color: var(--gold);
         }
 
-        .premium-nav {
+        nav {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .premium-nav a {
-            color: #e9e1f7;
+        nav a {
+            color: #eee5fa;
             text-decoration: none;
+            padding: 10px 16px;
             font-size: 14px;
             font-weight: 600;
-            padding: 10px 16px;
-            border-radius: 10px;
-            transition: 0.3s ease;
+            border-radius: 9px;
+            transition: .3s ease;
         }
 
-        .premium-nav a:hover,
-        .premium-nav a.active {
-            color: white;
-            background: #65429b;
-            transform: translateY(-2px);
+        nav a:hover,
+        nav a.active {
+            background: rgba(255,255,255,.13);
+            color: var(--gold);
         }
 
         /* HERO */
-        .register-hero {
-            min-height: 420px;
-            padding: 75px 8%;
+
+        .hero {
             position: relative;
             overflow: hidden;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 40px;
-            background: linear-gradient(120deg, #38205f, #6843a0, #9069c8);
+
+            padding: 75px 20px 110px;
+
+            text-align: center;
             color: white;
+
+            background:
+                radial-gradient(
+                    circle at 15% 20%,
+                    rgba(255,255,255,.13),
+                    transparent 25%
+                ),
+                radial-gradient(
+                    circle at 85% 80%,
+                    rgba(243,213,139,.15),
+                    transparent 25%
+                ),
+                linear-gradient(
+                    135deg,
+                    #32165f,
+                    #6336a0 55%,
+                    #9460c8
+                );
+        }
+
+        .hero::before,
+        .hero::after {
+            content: "";
+
+            position: absolute;
+
+            border: 1px solid rgba(255,255,255,.12);
+
+            border-radius: 50%;
+
+            animation:
+                orbit 18s linear infinite;
+        }
+
+        .hero::before {
+            width: 300px;
+            height: 300px;
+
+            top: -160px;
+            left: 8%;
+        }
+
+        .hero::after {
+            width: 420px;
+            height: 420px;
+
+            right: -170px;
+            bottom: -280px;
+
+            animation-direction: reverse;
         }
 
         .hero-content {
-            max-width: 650px;
             position: relative;
-            z-index: 2;
-            animation: slideUp 0.9s ease both;
+            z-index: 1;
+
+            max-width: 760px;
+            margin: auto;
+
+            animation:
+                heroEnter .9s ease both;
         }
 
-        .hero-label {
-            display: inline-block;
-            padding: 8px 15px;
-            border: 1px solid rgba(255,255,255,0.35);
-            background: rgba(255,255,255,0.12);
-            border-radius: 30px;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            margin-bottom: 20px;
-        }
-
-        .hero-content h1 {
-            font-size: clamp(35px, 5vw, 56px);
-            line-height: 1.15;
-            margin-bottom: 20px;
-            font-weight: 850;
-        }
-
-        .hero-content h1 span {
-            color: #e5d0ff;
-        }
-
-        .hero-content p {
-            max-width: 550px;
-            color: #f0e9fb;
-            font-size: 16px;
-            margin-bottom: 28px;
-        }
-
-        .hero-button {
+        .hero-badge {
             display: inline-flex;
             align-items: center;
-            gap: 12px;
-            padding: 13px 24px;
-            border-radius: 12px;
-            background: #e4c778;
-            color: #382653;
-            text-decoration: none;
-            font-weight: 800;
-            transition: 0.3s ease;
-            box-shadow: 0 8px 20px rgba(24, 11, 42, 0.2);
-        }
+            gap: 8px;
 
-        .hero-button:hover {
-            transform: translateY(-4px);
-            background: #f0d994;
-            box-shadow: 0 12px 25px rgba(24, 11, 42, 0.3);
-        }
-
-        .hero-decoration-card {
-            width: 290px;
-            min-width: 250px;
-            padding: 28px;
-            border-radius: 22px;
-            background: rgba(255,255,255,0.14);
-            border: 1px solid rgba(255,255,255,0.25);
-            backdrop-filter: blur(12px);
-            box-shadow: 0 15px 40px rgba(31, 15, 55, 0.18);
-            z-index: 2;
-            animation: floatCard 4s ease-in-out infinite;
-        }
-
-        .hero-card-icon {
-            width: 54px;
-            height: 54px;
-            border-radius: 17px;
-            background: #e4c778;
-            color: #382653;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
+            padding: 8px 16px;
             margin-bottom: 18px;
+
+            border: 1px solid rgba(255,255,255,.25);
+            border-radius: 50px;
+
+            background: rgba(255,255,255,.1);
+
+            color: #fff4d6;
+
+            font-size: 12px;
+            font-weight: 700;
+
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
-        .hero-decoration-card strong {
-            display: block;
-            font-size: 19px;
-            margin-bottom: 10px;
+        .hero h1 {
+            font-family: "Plus Jakarta Sans", sans-serif;
+
+            font-size:
+                clamp(32px, 5vw, 53px);
+
+            line-height: 1.2;
+
+            font-weight: 800;
+
+            margin-bottom: 16px;
         }
 
-        .hero-decoration-card span {
-            display: block;
-            font-size: 14px;
-            color: #eee5fa;
+        .hero h1 span {
+            color: var(--gold);
         }
 
-        .hero-decoration {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.07);
-            pointer-events: none;
-            animation: drift 9s ease-in-out infinite alternate;
-        }
+        .hero p {
+            max-width: 620px;
+            margin: auto;
 
-        .hero-circle-one {
-            width: 300px;
-            height: 300px;
-            top: -130px;
-            right: 25%;
-        }
+            color: #eee4fa;
 
-        .hero-circle-two {
-            width: 220px;
-            height: 220px;
-            bottom: -110px;
-            left: 35%;
-            animation-delay: 1.5s;
+            font-size: 16px;
         }
 
         /* FORM */
-        .register-page {
-            padding: 70px 20px 90px;
+
+        .form-wrapper {
             position: relative;
+
+            max-width: 960px;
+            width: 92%;
+
+            margin: -55px auto 75px;
+
+            z-index: 2;
         }
 
-        .register-card {
-            max-width: 850px;
-            margin: auto;
-            padding: 45px;
-            border-radius: 25px;
-            background: white;
-            box-shadow: 0 15px 55px rgba(56, 32, 95, 0.1);
-            border: 1px solid #eee7f8;
-            animation: slideUp 0.8s ease 0.15s both;
+        .form-container {
+            background: rgba(255,255,255,.96);
+
+            border: 1px solid rgba(255,255,255,.9);
+
+            border-radius: 24px;
+
+            padding: 42px;
+
+            box-shadow:
+                0 25px 75px
+                rgba(54, 25, 92, .12);
+
+            animation:
+                cardEnter .8s .15s ease both;
         }
 
-        .register-heading {
-            text-align: center;
-            margin-bottom: 35px;
+        .form-heading {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            gap: 20px;
+
+            padding-bottom: 25px;
+            margin-bottom: 30px;
+
+            border-bottom: 1px solid #eee7f5;
         }
 
-        .eyebrow {
-            display: inline-block;
-            color: #8052bd;
-            font-size: 11px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            margin-bottom: 8px;
+        .form-heading h2 {
+            font-family:
+                "Plus Jakarta Sans",
+                sans-serif;
+
+            font-size: 25px;
+
+            color: var(--purple-dark);
         }
 
-        .register-heading h2 {
-            color: #302047;
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
+        .form-heading p {
+            color: var(--muted);
 
-        .register-heading p {
-            color: #766b86;
             font-size: 14px;
-            max-width: 570px;
-            margin: auto;
+
+            margin-top: 5px;
         }
 
-        .register-form {
+        .form-icon {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
+
+            place-items: center;
+
+            width: 58px;
+            height: 58px;
+
+            flex-shrink: 0;
+
+            border-radius: 17px;
+
+            color: var(--purple);
+
+            background: var(--lavender);
+
+            font-size: 28px;
+
+            animation:
+                float 3s ease-in-out infinite;
         }
 
         .form-group {
-            min-width: 0;
-            animation: fadeIn 0.7s ease both;
+            margin-bottom: 27px;
         }
 
-        .form-group:nth-child(1) { animation-delay: 0.10s; }
-        .form-group:nth-child(2) { animation-delay: 0.15s; }
-        .form-group:nth-child(3) { animation-delay: 0.20s; }
-        .form-group:nth-child(4) { animation-delay: 0.25s; }
-        .form-group:nth-child(5) { animation-delay: 0.30s; }
-        .form-group:nth-child(6) { animation-delay: 0.35s; }
-        .form-group:nth-child(7) { animation-delay: 0.40s; }
-        .form-group:nth-child(8) { animation-delay: 0.45s; }
-
-        .group-label {
+        .form-label {
             display: block;
-            color: #382653;
-            font-size: 14px;
-            font-weight: 750;
+
             margin-bottom: 9px;
+
+            color: #40235f;
+
+            font-size: 14px;
+
+            font-weight: 700;
         }
 
-        .form-group input[type="text"],
-        .form-group input[type="email"],
-        .form-group select,
-        .form-group textarea {
+        .required {
+            color: #d64d76;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        select,
+        textarea {
             width: 100%;
-            padding: 14px 15px;
-            border: 1px solid #ded5ed;
-            border-radius: 11px;
-            background: #fcfbfe;
-            color: #302449;
+
+            padding: 14px 16px;
+
+            border: 1px solid var(--border);
+
+            border-radius: 12px;
+
+            background: #fdfbff;
+
+            color: var(--text);
+
             font: inherit;
-            font-size: 14px;
+
             outline: none;
-            transition: border 0.25s ease, box-shadow 0.25s ease,
-                        background 0.25s ease, transform 0.25s ease;
+
+            transition:
+                border-color .25s,
+                box-shadow .25s,
+                background .25s;
         }
 
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            border-color: #9063cf;
+        input::placeholder,
+        textarea::placeholder {
+            color: #b0a5bd;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #9864d0;
+
             background: white;
-            box-shadow: 0 0 0 4px rgba(144, 99, 207, 0.13);
-            transform: translateY(-1px);
+
+            box-shadow:
+                0 0 0 4px
+                rgba(152,100,208,.12);
         }
 
-        .form-group textarea {
+        textarea {
+            min-height: 120px;
             resize: vertical;
-            min-height: 110px;
         }
 
-        .choice-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .choice-item {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-            padding: 12px 14px;
-            border: 1px solid #e5def0;
-            border-radius: 11px;
-            background: #fcfbfe;
-            cursor: pointer;
-            transition: 0.25s ease;
+        .form-hint {
             font-size: 13px;
-            color: #514565;
+
+            color: var(--muted);
+
+            margin: -3px 0 13px;
         }
 
-        .choice-item:hover {
-            border-color: #a987d9;
-            background: #f5effd;
-            transform: translateX(4px);
+        /* RADIO + CHECKBOX */
+
+        .radio-options,
+        .checkbox-options {
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    2,
+                    minmax(0, 1fr)
+                );
+
+            gap: 13px;
         }
 
-        .choice-item input {
-            accent-color: #7950b5;
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-        }
-
-        .choice-item:has(input:checked) {
-            border-color: #8e65c6;
-            background: #f2eafd;
-            color: #382653;
-        }
-
-        .form-group:nth-child(7),
-        .form-group:nth-child(8),
-        .register-actions {
-            grid-column: 1 / -1;
-        }
-
-        .register-actions {
+        .choice-card {
             display: flex;
-            flex-wrap: wrap;
-            gap: 14px;
-            margin-top: 8px;
-            padding-top: 10px;
-        }
 
-        .register-submit,
-        .register-back {
-            min-height: 50px;
-            padding: 13px 24px;
-            border: none;
-            border-radius: 11px;
-            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            font: inherit;
-            font-size: 14px;
-            font-weight: 800;
+
+            gap: 12px;
+
+            padding: 15px 16px;
+
+            border: 1px solid var(--border);
+
+            border-radius: 13px;
+
+            background: #fdfbff;
+
             cursor: pointer;
-            transition: 0.3s ease;
+
+            transition: .25s ease;
         }
 
-        .register-submit {
+        .choice-card:hover {
+            border-color:
+                var(--purple-light);
+
+            background: #f7f0ff;
+
+            transform:
+                translateY(-2px);
+        }
+
+        .choice-card:has(input:checked) {
+            border-color:
+                var(--purple);
+
+            background: #f1e7ff;
+
+            box-shadow:
+                0 5px 15px
+                rgba(99,54,160,.08);
+        }
+
+        .choice-card input {
+            width: 18px;
+            height: 18px;
+
+            accent-color:
+                var(--purple);
+
+            flex-shrink: 0;
+
+            cursor: pointer;
+        }
+
+        .choice-card span {
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+
+        /* FACILITY */
+
+        .facility-section {
+            padding: 25px;
+
+            border: 1px solid #e9def5;
+
+            border-radius: 18px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #fcfaff,
+                    #f8f1ff
+                );
+        }
+
+        .facility-title-row {
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            margin-bottom: 7px;
+        }
+
+        .facility-title-icon {
+            display: grid;
+
+            place-items: center;
+
+            width: 46px;
+            height: 46px;
+
+            border-radius: 14px;
+
+            background: #eadbfc;
+
+            color: #6336a0;
+
+            font-size: 23px;
+
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            font-family:
+                "Plus Jakarta Sans",
+                sans-serif;
+
+            color: #4b2779;
+
+            font-size: 20px;
+
+            font-weight: 800;
+        }
+
+        .facility-options {
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    2,
+                    minmax(0, 1fr)
+                );
+
+            gap: 13px;
+
+            margin-top: 20px;
+        }
+
+        .facility-option {
+            position: relative;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            min-height: 92px;
+
+            padding: 15px;
+
+            border: 1px solid #e5d9f1;
+
+            border-radius: 14px;
+
+            background: white;
+
+            cursor: pointer;
+
+            transition: .3s ease;
+
+            overflow: hidden;
+        }
+
+        .facility-option:hover {
+            border-color: #a17acb;
+
+            transform:
+                translateY(-4px);
+
+            box-shadow:
+                0 10px 22px
+                rgba(79,39,121,.09);
+        }
+
+        .facility-option:has(input:checked) {
+            border-color: #8955c3;
+
+            background: #f3eaff;
+
+            box-shadow:
+                0 5px 16px
+                rgba(99,54,160,.1);
+        }
+
+        .facility-option input {
+            width: 19px;
+            height: 19px;
+
+            accent-color:
+                var(--purple);
+
+            flex-shrink: 0;
+        }
+
+        .facility-icon {
+            display: grid;
+
+            place-items: center;
+
+            width: 43px;
+            height: 43px;
+
+            flex-shrink: 0;
+
+            border-radius: 12px;
+
+            background: #f2eaff;
+
+            font-size: 22px;
+        }
+
+        .facility-text strong {
+            display: block;
+
+            color: #4d287a;
+
+            font-size: 13px;
+
+            line-height: 1.4;
+        }
+
+        .facility-text small {
+            display: block;
+
+            color: #897d98;
+
+            font-size: 11px;
+
+            line-height: 1.4;
+
+            margin-top: 4px;
+        }
+
+        /* BUTTON */
+
+        .submit-btn {
+            position: relative;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 10px;
+
+            width: 100%;
+
+            padding: 16px 20px;
+
+            margin-top: 8px;
+
+            overflow: hidden;
+
+            border: none;
+
+            border-radius: 13px;
+
+            background:
+                linear-gradient(
+                    110deg,
+                    #4a237d,
+                    #7742b4,
+                    #9b66cf
+                );
+
+            background-size: 200% 100%;
+
             color: white;
-            background: linear-gradient(135deg, #8052bd, #56318e);
-            box-shadow: 0 7px 18px rgba(86, 49, 142, 0.2);
+
+            font-family:
+                "Plus Jakarta Sans",
+                sans-serif;
+
+            font-size: 15px;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 10px 25px
+                rgba(99,54,160,.22);
+
+            transition: .35s ease;
         }
 
-        .register-submit:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 24px rgba(86, 49, 142, 0.3);
+        .submit-btn:hover {
+            background-position:
+                100% 0;
+
+            transform:
+                translateY(-3px);
+
+            box-shadow:
+                0 15px 30px
+                rgba(99,54,160,.3);
         }
 
-        .register-submit:active {
-            transform: scale(0.98);
+        .submit-arrow {
+            transition:
+                transform .3s;
         }
 
-        .register-back {
-            color: #64448e;
-            background: #f0eafa;
-            border: 1px solid #e3d7f3;
+        .submit-btn:hover
+        .submit-arrow {
+            transform:
+                translateX(5px);
         }
 
-        .register-back:hover {
-            background: #e6daf7;
-            transform: translateY(-3px);
+        .secure-note {
+            text-align: center;
+
+            color: #9588a2;
+
+            font-size: 12px;
+
+            margin-top: 15px;
         }
 
         /* FOOTER */
-        .register-footer {
-            padding: 23px 15px;
+
+        footer {
+            background: #29134d;
+
+            color: #e8def4;
+
+            padding: 30px 20px;
+
             text-align: center;
-            background: #24143f;
-            color: #ded2ef;
-            font-size: 13px;
         }
 
-        /* ANIMATIONS */
-        @keyframes slideUp {
+        .footer-logo {
+            font-family:
+                "Plus Jakarta Sans",
+                sans-serif;
+
+            font-size: 22px;
+
+            font-weight: 800;
+
+            margin-bottom: 5px;
+        }
+
+        .footer-logo span {
+            color: var(--gold);
+        }
+
+        footer p {
+            font-size: 12px;
+
+            color: #c9b9df;
+        }
+
+        /* ANIMATION */
+
+        @keyframes heroEnter {
+
             from {
                 opacity: 0;
-                transform: translateY(35px);
+                transform:
+                    translateY(25px);
             }
+
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform:
+                    translateY(0);
             }
+
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        @keyframes cardEnter {
+
+            from {
+                opacity: 0;
+                transform:
+                    translateY(35px)
+                    scale(.98);
+            }
+
+            to {
+                opacity: 1;
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+
         }
 
-        @keyframes floatCard {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-12px); }
+        @keyframes orbit {
+
+            to {
+                transform:
+                    rotate(360deg);
+            }
+
         }
 
-        @keyframes drift {
-            from { transform: translate(0, 0) scale(1); }
-            to { transform: translate(25px, 15px) scale(1.08); }
+        @keyframes float {
+
+            0%, 100% {
+                transform:
+                    translateY(0);
+            }
+
+            50% {
+                transform:
+                    translateY(-6px);
+            }
+
         }
 
         /* RESPONSIVE */
-        @media (max-width: 850px) {
-            .register-hero {
-                flex-direction: column;
-                align-items: flex-start;
-                padding: 65px 7%;
+
+        @media (max-width: 700px) {
+
+            .navbar {
+                padding: 15px 5%;
+
+                flex-direction:
+                    column;
+
+                align-items:
+                    flex-start;
             }
 
-            .hero-decoration-card {
+            nav {
                 width: 100%;
-                max-width: 450px;
-            }
-        }
 
-        @media (max-width: 650px) {
-            .premium-header {
-                padding: 14px 5%;
-            }
+                gap: 5px;
 
-            .header-container {
-                flex-direction: column;
-                gap: 12px;
-            }
-
-            .premium-nav {
-                width: 100%;
-                justify-content: center;
                 flex-wrap: wrap;
-                gap: 4px;
             }
 
-            .premium-nav a {
-                padding: 8px 11px;
-                font-size: 12px;
+            nav a {
+                padding:
+                    8px 10px;
+
+                font-size: 13px;
             }
 
-            .hero-content h1 {
-                font-size: 37px;
+            .hero {
+                padding:
+                    55px 20px 90px;
             }
 
-            .register-page {
-                padding: 45px 14px 60px;
+            .form-container {
+                padding:
+                    27px 20px;
             }
 
-            .register-card {
-                padding: 28px 20px;
-                border-radius: 18px;
+            .form-heading h2 {
+                font-size: 21px;
             }
 
-            .register-heading h2 {
-                font-size: 26px;
+            .facility-section {
+                padding: 18px;
             }
 
-            .register-form {
-                grid-template-columns: 1fr;
-                gap: 20px;
+            .radio-options,
+            .checkbox-options,
+            .facility-options {
+                grid-template-columns:
+                    1fr;
             }
 
-            .form-group:nth-child(7),
-            .form-group:nth-child(8),
-            .register-actions {
-                grid-column: auto;
-            }
-
-            .register-actions {
-                flex-direction: column;
-            }
-
-            .register-submit,
-            .register-back {
-                width: 100%;
-            }
         }
 
         @media (prefers-reduced-motion: reduce) {
+
             *,
             *::before,
             *::after {
-                scroll-behavior: auto !important;
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
+
+                animation-duration:
+                    .01ms !important;
+
+                animation-iteration-count:
+                    1 !important;
+
+                scroll-behavior:
+                    auto !important;
+
+                transition-duration:
+                    .01ms !important;
             }
+
         }
+
     </style>
+
 </head>
 
 <body>
 
-<header class="premium-header">
-    <div class="header-container">
-        <a href="index.php" class="premium-brand">
-            <span class="brand-icon">K</span>
-            <span class="brand-name">
-                KursusKu
-                <small>LEARN • GROW • SUCCEED</small>
-            </span>
-        </a>
+<div class="background-glow glow-one"></div>
+<div class="background-glow glow-two"></div>
 
-        <nav class="premium-nav">
-            <a href="index.php">Beranda</a>
-            <a href="register.php" class="active">Daftar Kursus</a>
-            <a href="history.php">Riwayat</a>
+
+<header>
+
+    <div class="navbar">
+
+        <div class="logo">
+            Kursus<span>Ku</span>
+        </div>
+
+        <nav>
+
+            <a href="index.php">
+                Katalog
+            </a>
+
+            <a
+                href="register.php"
+                class="active"
+            >
+                Daftar Kursus
+            </a>
+
+            <a href="history.php">
+                Riwayat
+            </a>
+
         </nav>
+
     </div>
+
 </header>
 
-<section class="register-hero">
-    <div class="hero-decoration hero-circle-one"></div>
-    <div class="hero-decoration hero-circle-two"></div>
+
+<section class="hero">
 
     <div class="hero-content">
-        <span class="hero-label">
-            ✦ WAKTUNYA MENINGKATKAN KEMAMPUAN ✦
-        </span>
+
+        <div class="hero-badge">
+            ✦ Mulai perjalanan belajarmu
+        </div>
 
         <h1>
-            Mulai Perjalanan<br>
-            <span>Belajarmu Hari Ini</span>
+            Wujudkan Potensimu<br>
+            <span>Bersama KursusKu</span>
         </h1>
 
         <p>
-            Temukan kursus yang sesuai dengan minat dan tujuanmu.
-            Kembangkan keterampilan bersama KursusKu.
+            Lengkapi formulir pendaftaran dan temukan
+            pengalaman belajar yang sesuai dengan
+            tujuan serta minatmu.
         </p>
 
-        <a href="#formulir" class="hero-button">
-            Isi Formulir <span aria-hidden="true">↓</span>
-        </a>
     </div>
 
-    <div class="hero-decoration-card">
-        <div class="hero-card-icon">✦</div>
-        <strong>Investasi untuk Masa Depan</strong>
-        <span>
-            Belajar lebih mudah, berkembang lebih jauh.
-            Mulai langkahmu bersama KursusKu.
-        </span>
-    </div>
 </section>
 
-<main class="register-page" id="formulir">
-    <section class="register-card">
-        <div class="register-heading">
-            <span class="eyebrow">PENDAFTARAN KURSUS</span>
-            <h2>Formulir Pendaftaran</h2>
-            <p>
-                Lengkapi data berikut untuk memilih program
-                pembelajaran yang sesuai dengan kebutuhan Anda.
-            </p>
+
+<main class="form-wrapper">
+
+    <div class="form-container">
+
+        <div class="form-heading">
+
+            <div>
+
+                <h2>
+                    Formulir Pendaftaran
+                </h2>
+
+                <p>
+                    Isi data berikut dengan lengkap dan benar.
+                </p>
+
+            </div>
+
+            <div class="form-icon">
+                ✦
+            </div>
+
         </div>
 
-        <form action="process.php" method="POST" class="register-form">
+
+        <form
+            action="process.php"
+            method="POST"
+        >
+
+            <!-- NAMA -->
 
             <div class="form-group">
-                <label class="group-label" for="name">
+
+                <label
+                    for="name"
+                    class="form-label"
+                >
                     Nama Lengkap
+                    <span class="required">*</span>
                 </label>
+
                 <input
                     type="text"
                     id="name"
                     name="name"
                     placeholder="Masukkan nama lengkap"
-                    maxlength="100"
                     autocomplete="name"
+                    minlength="3"
+                    maxlength="100"
                     required
                 >
+
             </div>
 
+
+            <!-- EMAIL -->
+
             <div class="form-group">
-                <label class="group-label" for="email">
+
+                <label
+                    for="email"
+                    class="form-label"
+                >
                     Alamat Email
+                    <span class="required">*</span>
                 </label>
+
                 <input
                     type="email"
                     id="email"
                     name="email"
                     placeholder="contoh@email.com"
-                    maxlength="150"
                     autocomplete="email"
+                    maxlength="150"
                     required
                 >
+
             </div>
 
+
+            <!-- KURSUS -->
+
             <div class="form-group">
-                <label class="group-label" for="course_code">
-                    Pilih Kursus
+
+                <label
+                    for="course_code"
+                    class="form-label"
+                >
+                    Pilihan Kursus
+                    <span class="required">*</span>
                 </label>
-                <select id="course_code" name="course_code" required>
-                    <option value="">-- Pilih Kursus --</option>
 
-                    <?php foreach ($courses as $course): ?>
-                        <option value="<?= e($course['code']) ?>">
-                            <?= e($course['name']) ?> -
-                            <?= e(formatRupiah((int) $course['fee'])) ?>
+                <select
+                    id="course_code"
+                    name="course_code"
+                    required
+                >
+
+                    <option value="">
+                        -- Pilih Kursus --
+                    </option>
+
+                    <?php foreach ($courses as $code => $course): ?>
+
+                        <?php
+
+                        if (is_array($course)) {
+
+                            $courseName =
+                                $course['name']
+                                ?? $course['title']
+                                ?? $course['course_name']
+                                ?? $code;
+
+                            $courseCode =
+                                $course['code']
+                                ?? $code;
+
+                        } else {
+
+                            $courseName =
+                                $course;
+
+                            $courseCode =
+                                $code;
+                        }
+
+                        ?>
+
+                        <option
+                            value="<?= e($courseCode) ?>"
+                        >
+                            <?= e($courseName) ?>
                         </option>
+
                     <?php endforeach; ?>
+
                 </select>
+
             </div>
 
+
+            <!-- JENIS PESERTA -->
+
             <div class="form-group">
-                <span class="group-label">Tipe Peserta</span>
 
-                <div class="choice-list">
-                    <label class="choice-item">
-                        <input
-                            type="radio"
-                            name="participant_type"
-                            value="mahasiswa"
-                            required
-                        >
-                        <span>Mahasiswa (Diskon 20%)</span>
-                    </label>
+                <label class="form-label">
 
-                    <label class="choice-item">
-                        <input
-                            type="radio"
-                            name="participant_type"
-                            value="guru"
-                        >
-                        <span>Guru (Diskon 15%)</span>
-                    </label>
+                    Jenis Peserta
+                    <span class="required">*</span>
 
-                    <label class="choice-item">
-                        <input
-                            type="radio"
-                            name="participant_type"
-                            value="umum"
+                </label>
+
+                <div class="radio-options">
+
+                    <?php
+
+                    $participantTypes = [
+
+                        'mahasiswa' =>
+                            'Mahasiswa',
+
+                        'guru' =>
+                            'Guru',
+
+                        'umum' =>
+                            'Umum'
+
+                    ];
+
+                    ?>
+
+                    <?php foreach (
+                        $participantTypes
+                        as $value => $label
+                    ): ?>
+
+                        <label
+                            class="choice-card"
                         >
-                        <span>Umum (Tanpa Diskon)</span>
-                    </label>
+
+                            <input
+                                type="radio"
+                                name="participant_type"
+                                value="<?= e($value) ?>"
+                                required
+                            >
+
+                            <span>
+                                <?= e($label) ?>
+                            </span>
+
+                        </label>
+
+                    <?php endforeach; ?>
+
                 </div>
+
             </div>
 
-            <div class="form-group">
-                <span class="group-label">Minat Belajar</span>
 
-                <div class="choice-list">
-                    <?php foreach ($interestOptions as $value => $label): ?>
-                        <label class="choice-item">
+            <!-- MINAT BELAJAR -->
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Minat Belajar
+                </label>
+
+                <p class="form-hint">
+                    Pilih minat yang sesuai.
+                    Kamu dapat memilih lebih dari satu.
+                </p>
+
+                <div class="checkbox-options">
+
+                    <?php foreach (
+                        $interestOptions
+                        as $interestValue => $interestLabel
+                    ): ?>
+
+                        <label
+                            class="choice-card"
+                        >
+
                             <input
                                 type="checkbox"
                                 name="interests[]"
-                                value="<?= e($value) ?>"
+                                value="<?= e($interestValue) ?>"
                             >
-                            <span><?= e($label) ?></span>
+
+                            <span>
+                                <?= e($interestLabel) ?>
+                            </span>
+
                         </label>
+
                     <?php endforeach; ?>
+
                 </div>
+
             </div>
 
+
+            <!-- METODE PEMBELAJARAN -->
+
             <div class="form-group">
-                <label class="group-label" for="learning_mode">
-                    Metode Belajar
+
+                <label class="form-label">
+
+                    Metode Pembelajaran
+                    <span class="required">*</span>
+
                 </label>
 
-                <select id="learning_mode" name="learning_mode" required>
-                    <option value="">-- Pilih Metode --</option>
-                    <option value="offline">Tatap Muka</option>
-                    <option value="online">Online</option>
-                    <option value="hybrid">Hybrid</option>
-                </select>
+                <div class="radio-options">
+
+                    <label
+                        class="choice-card"
+                    >
+
+                        <input
+                            type="radio"
+                            name="learning_mode"
+                            value="offline"
+                            required
+                        >
+
+                        <span>
+                            🏫 Offline
+                        </span>
+
+                    </label>
+
+
+                    <label
+                        class="choice-card"
+                    >
+
+                        <input
+                            type="radio"
+                            name="learning_mode"
+                            value="online"
+                        >
+
+                        <span>
+                            💻 Online
+                        </span>
+
+                    </label>
+
+
+                    <label
+                        class="choice-card"
+                    >
+
+                        <input
+                            type="radio"
+                            name="learning_mode"
+                            value="hybrid"
+                        >
+
+                        <span>
+                            🔄 Hybrid
+                        </span>
+
+                    </label>
+
+                </div>
+
             </div>
 
+
+            <!-- JUMLAH PAKET -->
+
             <div class="form-group">
-                <label class="group-label" for="package_count">
+
+                <label
+                    for="package_count"
+                    class="form-label"
+                >
+
                     Jumlah Paket
+                    <span class="required">*</span>
+
                 </label>
 
-                <select id="package_count" name="package_count" required>
-                    <option value="">-- Pilih Jumlah Paket --</option>
+                <select
+                    id="package_count"
+                    name="package_count"
+                    required
+                >
 
-                    <?php for ($i = 1; $i <= 3; $i++): ?>
-                        <option value="<?= $i ?>">
-                            <?= $i ?> Paket
-                        </option>
-                    <?php endfor; ?>
+                    <option value="">
+                        -- Pilih Jumlah Paket --
+                    </option>
+
+                    <option value="1">
+                        1 Paket
+                    </option>
+
+                    <option value="2">
+                        2 Paket
+                    </option>
+
+                    <option value="3">
+                        3 Paket
+                    </option>
+
                 </select>
+
             </div>
 
+
+            <!-- FASILITAS -->
+
             <div class="form-group">
-                <label class="group-label" for="notes">
-                    Catatan Tambahan
+
+                <div class="facility-section">
+
+                    <div class="facility-title-row">
+
+                        <div class="facility-title-icon">
+                            🎁
+                        </div>
+
+                        <div>
+
+                            <h3 class="section-title">
+                                Fasilitas Kursus
+                            </h3>
+
+                            <p class="form-hint">
+                                Pilih fasilitas yang kamu inginkan.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="facility-options">
+
+                        <label
+                            class="facility-option"
+                        >
+
+                            <input
+                                type="checkbox"
+                                name="facilities[]"
+                                value="Modul Pembelajaran"
+                            >
+
+                            <span class="facility-icon">
+                                📘
+                            </span>
+
+                            <span class="facility-text">
+
+                                <strong>
+                                    Modul Pembelajaran
+                                </strong>
+
+                                <small>
+                                    Materi digital untuk belajar.
+                                </small>
+
+                            </span>
+
+                        </label>
+
+
+                        <label
+                            class="facility-option"
+                        >
+
+                            <input
+                                type="checkbox"
+                                name="facilities[]"
+                                value="Bimbingan Mentor"
+                            >
+
+                            <span class="facility-icon">
+                                👨‍🏫
+                            </span>
+
+                            <span class="facility-text">
+
+                                <strong>
+                                    Bimbingan Mentor
+                                </strong>
+
+                                <small>
+                                    Pendampingan selama kursus.
+                                </small>
+
+                            </span>
+
+                        </label>
+
+
+                        <label
+                            class="facility-option"
+                        >
+
+                            <input
+                                type="checkbox"
+                                name="facilities[]"
+                                value="Praktik dan Proyek"
+                            >
+
+                            <span class="facility-icon">
+                                💻
+                            </span>
+
+                            <span class="facility-text">
+
+                                <strong>
+                                    Praktik dan Proyek
+                                </strong>
+
+                                <small>
+                                    Latihan meningkatkan keterampilan.
+                                </small>
+
+                            </span>
+
+                        </label>
+
+
+                        <label
+                            class="facility-option"
+                        >
+
+                            <input
+                                type="checkbox"
+                                name="facilities[]"
+                                value="Sertifikat"
+                            >
+
+                            <span class="facility-icon">
+                                🏆
+                            </span>
+
+                            <span class="facility-text">
+
+                                <strong>
+                                    Sertifikat
+                                </strong>
+
+                                <small>
+                                    Sertifikat penyelesaian kursus.
+                                </small>
+
+                            </span>
+
+                        </label>
+
+
+                        <label
+                            class="facility-option"
+                        >
+
+                            <input
+                                type="checkbox"
+                                name="facilities[]"
+                                value="Akses Materi"
+                            >
+
+                            <span class="facility-icon">
+                                📚
+                            </span>
+
+                            <span class="facility-text">
+
+                                <strong>
+                                    Akses Materi
+                                </strong>
+
+                                <small>
+                                    Akses materi pembelajaran.
+                                </small>
+
+                            </span>
+
+                        </label>
+
+
+                        <label
+                            class="facility-option"
+                        >
+
+                            <input
+                                type="checkbox"
+                                name="facilities[]"
+                                value="Komunitas Belajar"
+                            >
+
+                            <span class="facility-icon">
+                                🤝
+                            </span>
+
+                            <span class="facility-text">
+
+                                <strong>
+                                    Komunitas Belajar
+                                </strong>
+
+                                <small>
+                                    Diskusi dan berbagi pengetahuan.
+                                </small>
+
+                            </span>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- CATATAN -->
+
+            <div class="form-group">
+
+                <label
+                    for="notes"
+                    class="form-label"
+                >
+                    Catatan
                 </label>
 
                 <textarea
@@ -764,29 +1577,58 @@ require __DIR__ . '/helpers.php';
                     name="notes"
                     rows="4"
                     maxlength="500"
-                    placeholder="Tuliskan catatan jika ada..."
+                    placeholder="Tuliskan catatan tambahan jika ada..."
                 ></textarea>
+
             </div>
 
-            <div class="register-actions">
-                <button type="submit" class="register-submit">
-                    Kirim Pendaftaran
-                </button>
 
-                <a href="index.php" class="register-back">
-                    Kembali ke Beranda
-                </a>
-            </div>
+            <!-- TOMBOL -->
+
+            <button
+                type="submit"
+                class="submit-btn"
+            >
+
+                Daftar Sekarang
+
+                <span class="submit-arrow">
+                    ➜
+                </span>
+
+            </button>
+
+
+            <p class="secure-note">
+                ✦ Pastikan data yang kamu masukkan sudah benar.
+            </p>
 
         </form>
-    </section>
+
+    </div>
+
 </main>
 
-<footer class="register-footer">
+
+<footer>
+
+    <div class="footer-logo">
+        Kursus<span>Ku</span>
+    </div>
+
     <p>
-        &copy; <?= date('Y') ?> KursusKu. Semua hak dilindungi.
+        Belajar, Berkembang, dan Berprestasi.
     </p>
+
+    <p>
+        &copy; <?= date('Y') ?>
+        KursusKu.
+        Semua hak dilindungi.
+    </p>
+
 </footer>
 
+
 </body>
+
 </html>
