@@ -4,10 +4,10 @@
 // =====================================
 
 $courseName = 'Laravel Fundamental';
-$fee = 350000;
-$participantCount = 2;
+$fee = 2500000;
+$participantCount = 3;
 $discountPercent = 10;
-$adminFee = 25000;
+$adminFee = 50000;
 $isActive = true;
 
 // =====================================

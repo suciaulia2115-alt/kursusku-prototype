@@ -261,6 +261,9 @@ if (strlen($notes) > 500) {
 
 if (!empty($errors)):
 
+    // HTTP 422: data formulir tidak lolos validasi.
+    http_response_code(422);
+
 ?>
 
 <!DOCTYPE html>
